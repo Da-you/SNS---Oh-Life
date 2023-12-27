@@ -1,2 +1,2 @@
-# SNS---Oh-Life
+# SNS-Oh,Life
 Social Network Service
