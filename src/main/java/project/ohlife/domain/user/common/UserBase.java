@@ -5,6 +5,8 @@ import static jakarta.persistence.GenerationType.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
@@ -29,16 +31,22 @@ public abstract class UserBase extends BaseTimeEntity {
   private String email;
 
   private String password;
-
+  @Enumerated(EnumType.STRING)
   private UserRole role;
+
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     UserBase userBase = (UserBase) o;
     return id != null && Objects.equals(id, userBase.id);
   }
+
   @Override
   public int hashCode() {
     return Objects.hash(id);

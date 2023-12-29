@@ -4,6 +4,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.ohlife.domain.user.common.UserBase;
@@ -25,8 +26,7 @@ public class User extends UserBase {
 
   private Boolean isVerified; // 이메일 인증 및 휴대폰 인증 여부 저장
 
-
-
-
-
+  public User(Long id, String email, String password, UserRole role) {
+    super(id, email, password, role);
+  }
 }
