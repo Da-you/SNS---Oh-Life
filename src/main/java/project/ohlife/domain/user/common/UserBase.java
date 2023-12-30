@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import project.ohlife.common.BaseTimeEntity;
@@ -27,28 +26,11 @@ public abstract class UserBase extends BaseTimeEntity {
   @GeneratedValue(strategy = IDENTITY)
   @Column(name = "user_id")
   private Long id;
+  @Column(unique = true)
+  protected String email;
 
-  private String email;
-
-  private String password;
+  protected String password;
   @Enumerated(EnumType.STRING)
-  private UserRole role;
+  protected UserRole role;
 
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    UserBase userBase = (UserBase) o;
-    return id != null && Objects.equals(id, userBase.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
 }
