@@ -100,7 +100,7 @@ class UserControllerTest {
         .password("1234")
         .build();
 
-    doThrow(new CustomException(ErrorCode.USER_NOT_FOUND)).when(service).login(any());
+    doThrow(new CustomException(ErrorCode.NOT_FOUND_USER)).when(service).login(any());
 
     mockMvc.perform(post("/users/login")
             .contentType(MediaType.APPLICATION_JSON)

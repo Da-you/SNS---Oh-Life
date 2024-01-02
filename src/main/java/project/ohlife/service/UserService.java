@@ -29,7 +29,20 @@ public class UserService {
 
   @Transactional
   public void login(LoginRequest request) {
-    userRepo.findByEmailAndPassword(request.getEmail(), request.getPassword());
+    existsByEmail(request.getEmail());
+    existsByPassword(request.getPassword());
 
+  }
+
+  public void existsByPassword(String password) {
+    if (!userRepo.existsByPassword(password)) {
+      throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
+    }
+  }
+
+  public void existsByEmail(String email) {
+    if (!userRepo.existsByEmail(email)) {
+      throw new CustomException(ErrorCode.NOT_FOUND_USER);
+    }
   }
 }

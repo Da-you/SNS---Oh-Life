@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.ohlife.domain.user.common.UserBase;
@@ -31,15 +30,16 @@ public class User extends UserBase {
   private Boolean isVerified; // 이메일 인증 및 휴대폰 인증 여부 저장
 
 
-  @Builder
+
   public static User createUser(String email, String password, UserRole role, String nickname,String phoneNumber) {
-    return User.builder()
-        .email(email)
-        .password(password)
-        .role(role)
-        .nickname(nickname)
-        .phoneNumber(phoneNumber)
-        .build();
+    User user = new User();
+    user.email = email;
+    user.password = password;
+    user.role = role;
+    user.nickname = nickname;
+    user.phoneNumber = phoneNumber;
+    user.isVerified = true;
+    return user;
   }
 
   @Override

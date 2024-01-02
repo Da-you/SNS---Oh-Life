@@ -25,5 +25,12 @@ public class CommonResponse<T> {
         .build();
   }
 
+  public static CommonResponse<Void> ok() {
+    return CommonResponse.<Void>builder()
+        .isSuccess(true)
+        .message("success")
+        .build();
+  }
+
 
 }

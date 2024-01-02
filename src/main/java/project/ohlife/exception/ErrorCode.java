@@ -13,13 +13,16 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
   // CONFLICT(409, Resource 의 현재 상태와 충돌함, 보통 중복된 데이터가 존재 )
-  DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, 40901, "Duplicate Email"),
+  DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, 40901, "duplicate email"),
+
+  // BAD_REQUEST(400, 잘못된 요청)
+  INCORRECT_PASSWORD(HttpStatus.BAD_REQUEST, 40001, "invalid password"),
 
 
 
   // NOT_FOUND(404, Resource 를 찾을 수 없음)
-  USER_NOT_FOUND(HttpStatus.NOT_FOUND, 40401, "User Not Found"),
-  ;
+  NOT_FOUND_USER(HttpStatus.NOT_FOUND, 40401, "user not found by email"),
+;
 
   private final HttpStatus httpStatus;
   private final Integer code;
