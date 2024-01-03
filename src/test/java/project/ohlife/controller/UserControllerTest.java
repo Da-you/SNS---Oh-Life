@@ -15,8 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.exception.ErrorCode;
+import project.ohlife.fixture.UserFixture;
 import project.ohlife.repository.dto.UserDto.LoginRequest;
 import project.ohlife.repository.dto.UserDto.SignupRequest;
 import project.ohlife.service.UserService;
@@ -37,9 +39,9 @@ class UserControllerTest {
   void givenSignupRequest_whenSignup_thenSuccess() throws Exception {
     SignupRequest request = SignupRequest.builder()
         .email("abcd@naver.com")
-        .password("1234")
+        .password("kfcayo123")
         .nickname("abcd")
-        .phoneNumber("010-1234-5678")
+        .phoneNumber("01012345678")
         .build();
 
     doNothing().when(service).signup(request);
@@ -59,17 +61,17 @@ class UserControllerTest {
   void givenSignupRequest_whenSignup_thenFailDuplicate() throws Exception {
     SignupRequest request = SignupRequest.builder()
         .email("abcd@naver.com")
-        .password("1234")
+        .password("kfcayo123")
         .nickname("abcd")
-        .phoneNumber("010-1234-5678")
+        .phoneNumber("01012345678")
         .build();
 
-   doThrow(new CustomException(ErrorCode.DUPLICATE_EMAIL)).when(service).signup(any());
+   doThrow(new CustomException(ErrorCode.DUPLICATE_EMAIL)).when(service).signup(request);
 
     mockMvc.perform(post("/users/signup")
             .contentType(MediaType.APPLICATION_JSON)
             .content(
-                objectMapper.writeValueAsBytes(
+                objectMapper.writeValueAsString(
                   request))
         ).andDo(print())
         .andExpect(status().isConflict());

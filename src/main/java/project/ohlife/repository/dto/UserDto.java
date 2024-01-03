@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.ohlife.domain.user.User;
+import project.ohlife.domain.user.common.UserRole;
 
 public class UserDto {
 
@@ -17,6 +19,7 @@ public class UserDto {
   @AllArgsConstructor
   @NoArgsConstructor
   public static class SignupRequest {
+
     @Email
     @NotBlank(message = "email은 필수 입력 값입니다.")
     private String email;
@@ -29,6 +32,16 @@ public class UserDto {
     @NotBlank(message = "phoneNumber는 필수 입력 값입니다.")
     @Pattern(regexp = "^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$", message = "phoneNumber는 010으로 시작하는 11자리 숫자로 입력해주세요.")
     private String phoneNumber;
+
+    public User toEntity() {
+      return User.builder()
+          .email(this.email)
+          .password(password)
+          .role(UserRole.USER)
+          .nickname(nickname)
+          .phoneNumber(phoneNumber)
+          .build();
+    }
   }
   @Getter
   @Builder

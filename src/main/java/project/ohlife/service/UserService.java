@@ -2,10 +2,10 @@ package project.ohlife.service;
 
 import static project.ohlife.domain.user.User.createUser;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import project.ohlife.domain.user.common.UserRole;
+
+import org.springframework.transaction.annotation.Transactional;
 import project.ohlife.exception.CustomException;
 import project.ohlife.exception.ErrorCode;
 import project.ohlife.repository.UserRepository;
@@ -20,11 +20,7 @@ public class UserService {
 
   @Transactional
   public void signup(SignupRequest request) {
-    if (userRepo.existsByEmail(request.getEmail())) {
-      throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
-    }
-    userRepo.save(createUser(request.getEmail(), request.getPassword(),
-        UserRole.USER, request.getNickname(),request.getPhoneNumber()));
+    userRepo.save(request.toEntity());
   }
 
   @Transactional
@@ -34,14 +30,16 @@ public class UserService {
 
   }
 
+  @Transactional(readOnly = true)
   public void existsByPassword(String password) {
-    if (!userRepo.existsByPassword(password)) {
+    if (userRepo.existsByPassword(password)) {
       throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
     }
   }
 
+  @Transactional(readOnly = true)
   public void existsByEmail(String email) {
-    if (!userRepo.existsByEmail(email)) {
+    if (userRepo.existsByEmail(email)) {
       throw new CustomException(ErrorCode.NOT_FOUND_USER);
     }
   }

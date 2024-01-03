@@ -11,21 +11,24 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import project.ohlife.common.BaseTimeEntity;
 
 @Entity
+@Table(name = "user_base")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
-@DiscriminatorColumn
+@DiscriminatorColumn(name = "DTYPE")
 public abstract class UserBase extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
   @Column(name = "user_id")
   private Long id;
+
   @Column(unique = true)
   protected String email;
 
