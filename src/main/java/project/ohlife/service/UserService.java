@@ -1,6 +1,5 @@
 package project.ohlife.service;
 
-import static project.ohlife.domain.user.User.createUser;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,14 +29,12 @@ public class UserService {
 
   }
 
-  @Transactional(readOnly = true)
   public void existsByPassword(String password) {
     if (userRepo.existsByPassword(password)) {
       throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
     }
   }
 
-  @Transactional(readOnly = true)
   public void existsByEmail(String email) {
     if (userRepo.existsByEmail(email)) {
       throw new CustomException(ErrorCode.NOT_FOUND_USER);
