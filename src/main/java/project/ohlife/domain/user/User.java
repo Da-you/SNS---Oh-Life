@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
+import project.ohlife.domain.user.common.UserBase;
 import project.ohlife.domain.user.common.UserRole;
 
 @Entity
@@ -36,17 +36,17 @@ public class User extends UserBase {
   private LocalDateTime deletedAt;
 
 
-//  public static User createUser(String email, String password, UserRole role, String nickname,
-//      String phoneNumber) {
-//    User user = new User();
-//    user.email = email;
-//    user.password = password;
-//    user.role = role;
-//    user.nickname = nickname;
-//    user.phoneNumber = phoneNumber;
-//    user.isVerified = true;
-//    return user;
-//  }
+  public static User createUser(String email, String password, UserRole role, String nickname,
+      String phoneNumber) {
+    User user = new User();
+    user.email = email;
+    user.password = password;
+    user.role = role;
+    user.nickname = nickname;
+    user.phoneNumber = phoneNumber;
+    user.isVerified = true;
+    return user;
+  }
 
   @Builder
   public User(Long id, String email, String password, UserRole role, String nickname, String phoneNumber) {
