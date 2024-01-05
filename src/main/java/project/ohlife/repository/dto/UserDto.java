@@ -55,4 +55,14 @@ public class UserDto {
   }
 
 
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class CertificationRequest {
+
+    private String key;
+    private String certificationNumber;
+  }
+
+
 }

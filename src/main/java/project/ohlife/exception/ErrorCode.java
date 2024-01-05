@@ -17,6 +17,7 @@ public enum ErrorCode {
 
   // BAD_REQUEST(400, 잘못된 요청)
   INCORRECT_PASSWORD(HttpStatus.BAD_REQUEST, 40001, "invalid password"),
+  INVALID_CERTIFICATION_NUMBER(HttpStatus.BAD_REQUEST, 40002, "invalid certification number"),
 
 
 
