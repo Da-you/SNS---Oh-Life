@@ -9,9 +9,8 @@ import net.nurigo.sdk.message.model.MessageType;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
-import project.ohlife.common.properties.AppProperties;
+import project.ohlife.common.properties.SmsAppProperties;
 import project.ohlife.common.utils.certification.CertificationImpl;
 import project.ohlife.common.utils.certification.MessageTemplate;
 import project.ohlife.exception.CustomException;
@@ -20,20 +19,19 @@ import project.ohlife.repository.dto.UserDto.CertificationRequest;
 
 @Slf4j
 @Service
-@EnableConfigurationProperties(AppProperties.class)
 public class SmsCertificationService {
 
   private final CertificationImpl smsCertification;
-  private final AppProperties appProperties;
+  private final SmsAppProperties smsAppProperties;
   private final DefaultMessageService messageService;
 
   @Autowired
-  public SmsCertificationService(CertificationImpl smsCertification, AppProperties appProperties
+  public SmsCertificationService(CertificationImpl smsCertification, SmsAppProperties smsAppProperties
     ) {
     this.smsCertification = smsCertification;
-    this.appProperties = appProperties;
+    this.smsAppProperties = smsAppProperties;
     this.messageService = NurigoApp.INSTANCE.initialize(
-        appProperties.getApi(), appProperties.getSecret(), "https://api.coolsms.co.kr");
+        smsAppProperties.getApi(), smsAppProperties.getSecret(), "https://api.coolsms.co.kr");
 
   }
 
@@ -42,7 +40,7 @@ public class SmsCertificationService {
     String certificationCode = generateNumber();
 
     Message sms = new Message();
-    sms.setFrom(appProperties.getFrom());
+    sms.setFrom(smsAppProperties.getFrom());
     sms.setTo(request.getKey());
     sms.setType(MessageType.SMS);
     sms.setText(makeSmsContent(certificationCode));

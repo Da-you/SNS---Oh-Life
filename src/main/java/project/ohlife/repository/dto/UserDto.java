@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.ohlife.domain.user.User;
 import project.ohlife.domain.user.common.UserRole;
-
 public class UserDto {
 
   @Getter

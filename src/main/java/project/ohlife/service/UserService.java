@@ -19,6 +19,8 @@ public class UserService {
 
   @Transactional
   public void signup(SignupRequest request) {
+    // 이메일 중복확인
+    //
     userRepo.save(request.toEntity());
   }
 

@@ -22,6 +22,7 @@ import project.ohlife.domain.user.common.UserRole;
 import project.ohlife.exception.CustomException;
 import project.ohlife.exception.ErrorCode;
 import project.ohlife.repository.UserRepository;
+import project.ohlife.repository.dto.UserDto;
 import project.ohlife.repository.dto.UserDto.LoginRequest;
 import project.ohlife.repository.dto.UserDto.SignupRequest;
 
@@ -34,7 +35,7 @@ class UserServiceTest {
   private UserRepository userRepository;
 
 
-  private SignupRequest setRequest() {
+  private UserDto.SignupRequest setRequest() {
     SignupRequest request = SignupRequest.builder()
         .email("abcd@naver.com")
         .password("kfcayo123")

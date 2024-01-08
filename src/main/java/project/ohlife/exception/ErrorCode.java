@@ -23,7 +23,10 @@ public enum ErrorCode {
 
   // NOT_FOUND(404, Resource 를 찾을 수 없음)
   NOT_FOUND_USER(HttpStatus.NOT_FOUND, 40401, "user not found by email"),
-;
+
+
+  // 500(INTERNAL_SERVER_ERROR, 서버 내부 에러)
+  SEND_EMAIL_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,50001 ,"mail send fail" );
 
   private final HttpStatus httpStatus;
   private final Integer code;
