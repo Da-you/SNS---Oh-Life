@@ -2,6 +2,8 @@ package project.ohlife.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,16 @@ public class UserController {
   private final EmailCertificationService emailCertificationService;
   private final SmsCertificationService smsCertificationService;
 
+  @GetMapping("/email/{email}")
+  public CommonResponse<Boolean> checkEmailDuplicate(@PathVariable String email) {
+    return CommonResponse.ok(userService.checkEmailDuplicate(email));
+  }
+
+  @GetMapping("/phoneNumber/{phoneNumber}")
+  public CommonResponse<Boolean> checkPhoneNumberDuplicate(@PathVariable String phoneNumber) {
+    return CommonResponse.ok(userService.checkPhoneNumberDuplicate(phoneNumber));
+  }
+
   @PostMapping("/signup")
   public CommonResponse<Void> signup(@RequestBody @Valid SignupRequest request) {
     userService.signup(request);
@@ -40,6 +52,7 @@ public class UserController {
     emailCertificationService.sendEmailForCertification(request.getKey());
     return CommonResponse.ok();
   }
+
   @PostMapping("/mail-certification/verify")
   public CommonResponse<Void> verifyEmail(@RequestBody CertificationRequest request) {
     emailCertificationService.verifyEmail(request);
@@ -51,6 +64,7 @@ public class UserController {
     smsCertificationService.sendSms(request);
     return CommonResponse.ok();
   }
+
   @PostMapping("/sms-certification/verify")
   public CommonResponse<Void> verifySms(@RequestBody CertificationRequest request) {
     smsCertificationService.verifySms(request);

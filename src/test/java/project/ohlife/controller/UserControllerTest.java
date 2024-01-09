@@ -15,10 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.exception.ErrorCode;
-import project.ohlife.fixture.UserFixture;
 import project.ohlife.repository.dto.UserDto.LoginRequest;
 import project.ohlife.repository.dto.UserDto.SignupRequest;
 import project.ohlife.service.UserService;
@@ -66,7 +64,7 @@ class UserControllerTest {
         .phoneNumber("01012345678")
         .build();
 
-   doThrow(new CustomException(ErrorCode.DUPLICATE_EMAIL)).when(service).signup(request);
+   doThrow(new CustomException(ErrorCode.EMAIL_DUPLICATE)).when(service).signup(request);
 
     mockMvc.perform(post("/users/signup")
             .contentType(MediaType.APPLICATION_JSON)
@@ -102,7 +100,7 @@ class UserControllerTest {
         .password("1234")
         .build();
 
-    doThrow(new CustomException(ErrorCode.NOT_FOUND_USER)).when(service).login(any());
+    doThrow(new CustomException(ErrorCode.USER_NOT_FOUND)).when(service).login(any());
 
     mockMvc.perform(post("/users/login")
             .contentType(MediaType.APPLICATION_JSON)

@@ -55,8 +55,9 @@ class UserServiceTest {
 
   @BeforeEach
   public void testUser() {
-     User user = User.createUser("abcd@naver.com", "kfcayo123", UserRole.USER, "abcd", "01012345678");
-     userRepository.save(user);
+    User user = User.createUser("abcd@naver.com", "kfcayo123", UserRole.USER, "abcd",
+        "01012345678");
+    userRepository.save(user);
   }
 
   @AfterEach
@@ -90,11 +91,12 @@ class UserServiceTest {
   @DisplayName("[로그인]- 로그인 성공")
   void givenLoginRequest_whenLogin_thenSuccess() {
     LoginRequest request = setLoginRequest();
-    when(userRepository.existsByEmailAndPassword(request.getEmail(), request.getPassword())).thenReturn(true);
+    when(userRepository.existsByEmailAndPassword(request.getEmail(),
+        request.getPassword())).thenReturn(true);
     userService.login(request);
     verify(userRepository, atLeastOnce()).
         existsByEmailAndPassword(request.getEmail(),
-        request.getPassword());
+            request.getPassword());
   }
 
   // TODO: 로그인시 해댱 email로 가입한 유저가 없는경우
@@ -108,7 +110,7 @@ class UserServiceTest {
     when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
     CustomException customException = assertThrows(CustomException.class,
         () -> userService.login(request));
-    assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.NOT_FOUND_USER);
+    assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.USER_NOT_FOUND);
     verify(userRepository, atLeastOnce()).existsByEmail(request.getEmail());
   }
   // TODO: 로그인시 비밀번호가 틀린경우

@@ -32,7 +32,8 @@ public class UserDto {
     @Pattern(regexp = "^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$", message = "phoneNumber는 010으로 시작하는 11자리 숫자로 입력해주세요.")
     private String phoneNumber;
 
-    public User toEntity() {
+
+    public User toEntity(String password) {
       return User.builder()
           .email(this.email)
           .password(password)

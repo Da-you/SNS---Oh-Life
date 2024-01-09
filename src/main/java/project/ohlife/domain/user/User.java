@@ -31,7 +31,6 @@ public class User extends UserBase {
   @Column(unique = true)
   private String phoneNumber;
 
-  private Boolean isVerified; // 이메일 인증 및 휴대폰 인증 여부 저장
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
@@ -44,7 +43,6 @@ public class User extends UserBase {
     user.role = role;
     user.nickname = nickname;
     user.phoneNumber = phoneNumber;
-    user.isVerified = true;
     return user;
   }
 
@@ -53,7 +51,6 @@ public class User extends UserBase {
     super(id, email, password, role);
     this.nickname = nickname;
     this.phoneNumber = phoneNumber;
-    this.isVerified = true;
   }
 
   @Override

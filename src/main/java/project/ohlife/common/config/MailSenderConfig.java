@@ -24,8 +24,7 @@ public class MailSenderConfig {
 
     mailSender.setUsername(properties.getUsername());
     mailSender.setPassword(properties.getPassword());
-    log.info("비밀번호 : ", properties.getPassword());
-    log.info("아이디 : ", properties.getUsername());
+
 
     Properties props = mailSender.getJavaMailProperties();
     props.put("mail.transport.protocol", "smtp");
