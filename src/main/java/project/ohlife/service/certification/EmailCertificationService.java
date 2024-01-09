@@ -1,7 +1,7 @@
 package project.ohlife.service.certification;
 
 import static project.ohlife.common.utils.certification.CertificationConstants.TITLE;
-import static project.ohlife.common.utils.certification.CertificationNumberGenerator.generateNumber;
+import static project.ohlife.common.utils.RandomNumberGenerator.generateNumber;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

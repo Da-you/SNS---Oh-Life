@@ -24,7 +24,8 @@ public enum ErrorCode {
 
   // NOT_FOUND(404, Resource 를 찾을 수 없음)
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, 40401, "user not found by email"),
-
+//  UNAUTHENTICATED_USER(401, 인증되지 않은 사용자)
+  UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, 40101, "unauthenticated user"),
 
   // 500(INTERNAL_SERVER_ERROR, 서버 내부 에러)
   SEND_EMAIL_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,50001 ,"mail send fail" ),

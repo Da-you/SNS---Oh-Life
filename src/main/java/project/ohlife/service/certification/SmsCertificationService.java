@@ -1,6 +1,6 @@
 package project.ohlife.service.certification;
 
-import static project.ohlife.common.utils.certification.CertificationNumberGenerator.generateNumber;
+import static project.ohlife.common.utils.RandomNumberGenerator.generateNumber;
 
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;

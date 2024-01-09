@@ -1,12 +1,16 @@
 package project.ohlife.service;
 
 
+import static project.ohlife.common.utils.RandomNumberGenerator.maskEmail;
+import static project.ohlife.common.utils.RandomNumberGenerator.maskPhoneNumber;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.exception.ErrorCode;
 import project.ohlife.repository.UserRepository;
@@ -57,10 +61,26 @@ public class UserService {
   @Transactional(readOnly = true)
   public void existByEmailAndPassword(LoginRequest request) {
     String encodePassword = encrypt.encrypt(request.getPassword());
+    log.info("encode password: {}", encodePassword);
     if (!userRepo.existsByEmailAndPassword(request.getEmail(), encodePassword)) {
       throw new CustomException(ErrorCode.USER_NOT_FOUND);
     }
   }
 
+  @Transactional
+  public void logout() {
+    log.info("logout session: {}", session.getAttribute("user"));
+    if (session.getAttribute("user") != null) {
+      session.invalidate();
+      log.info("logout session: {}", session.getAttribute("user"));
+    }
+  }
 
+  @Transactional
+  public void withdrawal(LoginRequest request) {
+    existByEmailAndPassword(request);
+    User user = userRepo.findByEmail(request.getEmail());
+
+    user.withdrawal(maskEmail(user.getEmail()), maskPhoneNumber(user.getPhoneNumber()));
+  }
 }
