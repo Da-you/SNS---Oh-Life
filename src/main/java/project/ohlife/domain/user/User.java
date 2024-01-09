@@ -53,6 +53,12 @@ public class User extends UserBase {
     this.phoneNumber = phoneNumber;
   }
 
+  public void withdrawal(String email, String phoneNumber) {
+    this.deletedAt = LocalDateTime.now();
+    this.email = email;
+    this.phoneNumber = phoneNumber;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

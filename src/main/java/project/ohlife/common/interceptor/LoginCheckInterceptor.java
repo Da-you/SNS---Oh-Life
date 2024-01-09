@@ -5,7 +5,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
-import project.ohlife.exception.UnauthenticatedUserException;
+import project.ohlife.exception.CustomException;
+import project.ohlife.exception.ErrorCode;
 
 @Slf4j
 public class LoginCheckInterceptor implements HandlerInterceptor {
@@ -19,8 +20,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
     HttpSession session = request.getSession();
     if (session == null || session.getAttribute("user") == null) {
-      log.info("미인증 사용자 요청");
-      throw new UnauthenticatedUserException("미인증 사용자 요청");
+      log.info("비 로그인 유저");
+      throw new CustomException(ErrorCode.UNAUTHENTICATED_USER);
     }
 
     return true;
