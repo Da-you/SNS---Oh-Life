@@ -8,6 +8,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import project.ohlife.domain.user.User;
+
 @Slf4j
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -16,12 +18,12 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     log.info("supportsParameter 실행");
 
     boolean hasCurrentUserAnnotation = parameter.hasParameterAnnotation(LoginUser.class);
-    boolean hasUserClass = LoginUser.class.isAssignableFrom(parameter.getParameterType());
+    boolean hasStringClass = parameter.getParameterType() == String.class; // 어노테이션이 붙는 파라미터 타입과 일치해야함
 
-    // CurrentUser 클래스가 이 파라미터 타입과 호환 가능한지 여부를 확인 > 호환이 가능하다는것은
-    // ->  CurrentUser 클래스가 파라미터 타입의 하위 클래스이거나, 또는 인터페이스를 구현하고 있는 경우를 의미합니다.
+    // LoginUser 클래스가 이 파라미터 타입과 호환 가능한지 여부를 확인 > 호환이 가능하다는것은
+    // ->  LoginUser 클래스가 파라미터 타입의 하위 클래스이거나, 또는 인터페이스를 구현하고 있는 경우를 의미합니다.
 
-    return hasCurrentUserAnnotation && hasUserClass;
+    return hasCurrentUserAnnotation && hasStringClass;
   }
 
   @Override
@@ -35,6 +37,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     if (session == null) {
       return null;
     }
+    log.info("session: {}", session.getAttribute("user"));
     return session.getAttribute("user");
   }
 

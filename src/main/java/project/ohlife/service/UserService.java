@@ -56,6 +56,7 @@ public class UserService {
   public void login(LoginRequest request) {
     existByEmailAndPassword(request);
     session.setAttribute("user", request.getEmail());
+    log.info("login session: {}", session.getAttribute("user"));
   }
 
   @Transactional(readOnly = true)
@@ -82,5 +83,13 @@ public class UserService {
     User user = userRepo.findByEmail(request.getEmail());
 
     user.withdrawal(maskEmail(user.getEmail()), maskPhoneNumber(user.getPhoneNumber()));
+  }
+
+  public User getUser(String email) {
+    if (userRepo.findByEmail(email) == null) {
+      throw new CustomException(ErrorCode.USER_NOT_FOUND);
+    } else {
+      return userRepo.findByEmail(email);
+    }
   }
 }

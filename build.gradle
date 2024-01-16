@@ -42,6 +42,12 @@ dependencies {
 	//coolSms
 	implementation 'net.nurigo:sdk:4.3.0'
 
+	// s3
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'com.google.code.gson:gson'
+	implementation group: 'org.apache.tika', name: 'tika-core', version: '2.7.0'
+
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'
