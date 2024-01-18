@@ -4,7 +4,6 @@ import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.PROTECTED;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +13,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -48,7 +49,7 @@ public class Article extends BaseTimeEntity {
   private String imageUrl;
   @OrderBy("createdAt DESC")
   @OneToMany(mappedBy = "article", cascade = ALL, orphanRemoval = true)
-  private Set<ArticleComment> articleComments = new LinkedHashSet<>();
+  private List<ArticleComment> articleComments = new ArrayList<>();
   @Builder
   public Article(User user, String content, String imageUrl) {
     this.user = user;

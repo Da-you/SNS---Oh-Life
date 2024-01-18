@@ -2,8 +2,11 @@ package project.ohlife.service;
 
 import static project.ohlife.exception.ErrorCode.*;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,8 +15,12 @@ import project.ohlife.domain.article.Article;
 import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.repository.ArticleRepository;
+import project.ohlife.repository.dto.ArticleDto.ArticleDetailResponse;
+import project.ohlife.repository.dto.ArticleDto.ArticlesResponse;
 import project.ohlife.repository.dto.ArticleDto.WriteArticleRequest;
+import project.ohlife.response.PageResponse;
 import project.ohlife.service.s3.AwsS3Service;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,6 +28,39 @@ public class ArticleService {
 
   private final ArticleRepository articleRepository;
   private final AwsS3Service s3Service;
+
+  // 게시글 전체 조회 조건이 없는
+  @Transactional(readOnly = true)
+  public PageResponse<ArticlesResponse> getArticles(User user) {
+    Page<Article> articles = articleRepository.findAll(PageRequest.of(0, 10));
+
+    List<String> imageUrls = articles.stream()
+        .map(Article::getImageUrl)
+        .toList();
+
+    List<ArticlesResponse> contents = articles.stream()
+        .map(article -> new ArticlesResponse(article.getUser().getProfileImage(),
+            article.getUser().getNickname(), imageUrls,
+            article.getContent())).toList();
+
+    return PageResponse.of(articles, contents);
+  }
+
+  // 게시글 상세 조회? (게시글에 있는 댓글을 보여주는 정도?)
+  @Transactional(readOnly = true)
+  public ArticleDetailResponse getArticleDetail(User user, Long articleId) {
+    Article article = articleRepository.findById(articleId)
+        .orElseThrow(() -> new CustomException(ARTICLE_NOT_FOUND));
+    User findUser = article.getUser();
+
+    ArticlesResponse articles = new ArticlesResponse(findUser.getProfileImage(),
+        findUser.getNickname(), List.of(article.getImageUrl()), article.getContent());
+
+    return new ArticleDetailResponse(articles, article.getArticleComments());
+
+
+  }
+  // 게시글 검색(querydsl 사용 예정)
 
 
   @Transactional
