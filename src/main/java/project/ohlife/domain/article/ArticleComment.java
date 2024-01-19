@@ -11,9 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.ohlife.common.BaseTimeEntity;
+import project.ohlife.domain.user.User;
 
 @Entity
 @Getter
@@ -24,12 +26,23 @@ public class ArticleComment extends BaseTimeEntity {
   @GeneratedValue(strategy = IDENTITY)
   private Long id;
 
+  @JoinColumn(name = "user_id", nullable = false)
+  @ManyToOne(fetch = LAZY, optional = false)
+  private User user;
+
   @JoinColumn(name = "article_id", nullable = false)
   @ManyToOne(fetch = LAZY, optional = false)
   private Article article;
 
   @Column(length = 1000)
   private String content;
+
+  @Builder
+  public ArticleComment(User user, Article article, String content) {
+    this.user = user;
+    this.article = article;
+    this.content = content;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -46,5 +59,9 @@ public class ArticleComment extends BaseTimeEntity {
   @Override
   public int hashCode() {
     return Objects.hash(id);
+  }
+
+  public void update(String comment) {
+    this.content = comment;
   }
 }

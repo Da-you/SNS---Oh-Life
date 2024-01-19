@@ -25,6 +25,7 @@ public enum ErrorCode {
   // NOT_FOUND(404, Resource 를 찾을 수 없음)
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, 40401, "user not found by email"),
   ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, 40402, "article not found"),
+  ARTICLE_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,40403 ,"comment is not found" ),
   //  UNAUTHENTICATED_USER(401, 인증되지 않은 사용자)
   UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, 40101, "unauthenticated user"),
 

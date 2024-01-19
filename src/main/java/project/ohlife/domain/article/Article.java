@@ -47,7 +47,7 @@ public class Article extends BaseTimeEntity {
   private LocalDateTime deletedAt;
 
   private String imageUrl;
-  @OrderBy("createdAt DESC")
+//  @OrderBy("createdAt DESC")
   @OneToMany(mappedBy = "article", cascade = ALL, orphanRemoval = true)
   private List<ArticleComment> articleComments = new ArrayList<>();
   @Builder

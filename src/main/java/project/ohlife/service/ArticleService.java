@@ -15,6 +15,7 @@ import project.ohlife.domain.article.Article;
 import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.repository.ArticleRepository;
+import project.ohlife.repository.dto.ArticleCommentDto.ArticleCommentResponse;
 import project.ohlife.repository.dto.ArticleDto.ArticleDetailResponse;
 import project.ohlife.repository.dto.ArticleDto.ArticlesResponse;
 import project.ohlife.repository.dto.ArticleDto.WriteArticleRequest;
@@ -56,7 +57,13 @@ public class ArticleService {
     ArticlesResponse articles = new ArticlesResponse(findUser.getProfileImage(),
         findUser.getNickname(), List.of(article.getImageUrl()), article.getContent());
 
-    return new ArticleDetailResponse(articles, article.getArticleComments());
+    List<ArticleCommentResponse> comments = article.getArticleComments().stream()
+        .map(articleComment -> new ArticleCommentResponse(articleComment.getUser().getNickname(),
+            articleComment.getUser().getProfileImage(),
+            articleComment.getContent()))
+        .toList();
+
+    return new ArticleDetailResponse(articles, comments);
 
 
   }

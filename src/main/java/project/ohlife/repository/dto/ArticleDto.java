@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import project.ohlife.domain.article.Article;
 import project.ohlife.domain.article.ArticleComment;
 import project.ohlife.domain.user.User;
+import project.ohlife.repository.dto.ArticleCommentDto.ArticleCommentResponse;
 
 public class ArticleDto {
 
@@ -56,7 +57,7 @@ public class ArticleDto {
   public static class ArticleDetailResponse {
 
     private ArticlesResponse articlesResponse;
-    private List<ArticleComment> comments; // 댓글 작성자의 이름과 프로필도 가져와야하기에 별도의 DTO 생성 필요
+    private List<ArticleCommentResponse> comments; // 댓글 작성자의 이름과 프로필도 가져와야하기에 별도의 DTO 생성 필요
   }
 
 
