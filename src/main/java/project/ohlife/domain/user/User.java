@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import project.ohlife.domain.user.common.UserBase;
 import project.ohlife.domain.user.common.UserRole;
 
@@ -20,6 +22,7 @@ import project.ohlife.domain.user.common.UserRole;
 @AllArgsConstructor
 @Table(name = "users")
 @DiscriminatorValue("users")
+@SQLDelete(sql = "UPDATE users SET deleted_at = NOW() WHERE id = ?")
 @NoArgsConstructor(access = PROTECTED)
 public class User extends UserBase {
 

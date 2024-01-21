@@ -1,5 +1,6 @@
 package project.ohlife.repository;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import project.ohlife.domain.user.User;
 
