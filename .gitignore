@@ -180,6 +180,7 @@ $RECYCLE.BIN/
 !src/**/build/
 *.yml
 application.properties
+!src/main/generated/**
 # Ignore Gradle GUI config
 gradle-app.setting
 
