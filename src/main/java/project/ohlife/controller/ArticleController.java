@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,11 +41,16 @@ public class ArticleController {
     articleService.writeArticle(user, request, imageFile);
     return CommonResponse.ok();
   }
-
   @GetMapping
   public CommonResponse<PageResponse<ArticlesResponse>> getArticles(@LoginUser String email) {
     User user = userService.getUser(email);
     return CommonResponse.ok(articleService.getArticles(user));
+  }
+  @GetMapping("/search")
+  public CommonResponse<PageResponse<ArticlesResponse>> getArticlesByKeyword(@LoginUser String email,
+      @RequestParam String keyword) {
+    User user = userService.getUser(email);
+    return CommonResponse.ok(articleService.getArticlesByKeyword(user, keyword));
   }
   @GetMapping("/{articleId}")
   public CommonResponse<ArticleDetailResponse> getArticleDetail(@LoginUser String email,

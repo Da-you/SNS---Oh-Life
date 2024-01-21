@@ -33,4 +33,13 @@ public class PageResponse<T> {
         contents);
   }
 
+  public static <E, D> PageResponse<D> of(List<E> entity, List<D> contents) {
+    return new PageResponse<>(0,
+        entity.size(),
+        entity.size(),
+        entity.size(),
+        1,
+        contents);
+  }
+
 }

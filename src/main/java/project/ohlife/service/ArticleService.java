@@ -47,6 +47,23 @@ public class ArticleService {
     return PageResponse.of(articles, contents);
   }
 
+  // 게시글 검색(querydsl 사용 예정)
+  public PageResponse<ArticlesResponse> getArticlesByKeyword(User user, String keyword) {
+    Page<Article> articles = articleRepository.getArticleListFindByKeyword(keyword,
+        PageRequest.of(0, 10));
+
+    List<String> imageUrls = articles.stream()
+        .map(Article::getImageUrl)
+        .toList();
+
+    List<ArticlesResponse> contents = articles.stream()
+        .map(article -> new ArticlesResponse(article.getUser().getProfileImage(),
+            article.getUser().getNickname(), imageUrls,
+            article.getContent())).toList();
+
+    return PageResponse.of(articles, contents);
+  }
+
   // 게시글 상세 조회? (게시글에 있는 댓글을 보여주는 정도?)
   @Transactional(readOnly = true)
   public ArticleDetailResponse getArticleDetail(User user, Long articleId) {
@@ -67,7 +84,6 @@ public class ArticleService {
 
 
   }
-  // 게시글 검색(querydsl 사용 예정)
 
 
   @Transactional

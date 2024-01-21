@@ -11,13 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,7 +44,6 @@ public class Article extends BaseTimeEntity {
   private LocalDateTime deletedAt;
 
   private String imageUrl;
-//  @OrderBy("createdAt DESC")
   @OneToMany(mappedBy = "article", cascade = ALL, orphanRemoval = true)
   private List<ArticleComment> articleComments = new ArrayList<>();
   @Builder
