@@ -7,8 +7,10 @@ on:
 
 env:
   S3_BUCKET_NAME: onlycodedeploy
+  RESOURCES_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: CODE-DEPLOY-OHLIFE
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: CODE-DEPLOY-GROUP
+  APPLICATION: application.yml
 
 jobs:
   build:
@@ -20,8 +22,18 @@ jobs:
 
       - name: Set up JDK 17
         uses: actions/setup-java@v1
-        with: 
+        with:
           java-version: 17
+
+      - name: Set yml file
+        uses: actions/download-artifact@v2
+          - run: touch ./src/main/resources/application.yml
+          - run: echo ${{ secrets.APPLICATION }} > ${{ env.RESOURCES_PATH }}
+              - uses: actions/upload-artifact@v2
+                with:
+                  name: application.yml
+                  path: ${{ env.RESOURCES_PATH }}
+
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
@@ -37,7 +49,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-                
+
       - name: Upload to s3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://onlycodedeploy/$GITHUB_SHA.zip
 

@@ -63,6 +63,14 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+/*
+ plain.jar 파일은 jar 파일과는 다르게
+ dependencies를 제외한 [classes / resources] 만을 담고 있다.
+ java -jar 옵션으로 jar 로 실행시킬수 없다
+ */
+jar {
+	enabled = false
+}
 
 // === ⭐ QueryDsl 빌드 옵션 (선택) ===
 def querydslSrcDir = 'src/main/generated'
