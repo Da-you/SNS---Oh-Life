@@ -10,7 +10,6 @@ env:
   RESOURCES_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: CODE-DEPLOY-OHLIFE
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: CODE-DEPLOY-GROUP
-  APPLICATION: application.yml
 
 jobs:
   build:
