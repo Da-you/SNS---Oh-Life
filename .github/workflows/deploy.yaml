@@ -7,7 +7,7 @@ on:
 
 env:
   S3_BUCKET_NAME: onlycodedeploy
-  RESOURCES_PATH: ./src/main/resources/application.yml
+  RESOURCE_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: CODE-DEPLOY-OHLIFE
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: CODE-DEPLOY-GROUP
 
@@ -27,7 +27,7 @@ jobs:
       - name: Set yaml file
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{ env.RESOURCES_PATH }}
+          files: ${{ env.RESOURCE_PATH }}
         env:
           spring.datasource.url: ${{ secrets.RDS_HOST }}
           spring.datasource.username: ${{ secrets.RDS_USERNAME }}
