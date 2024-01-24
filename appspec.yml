@@ -4,6 +4,7 @@ files:
   - source: /
     destination: /home/ubuntu/SNS-OhLife
     overwrite: yes
+file_exist_behavior: OVERWRITE
 
 permissions:
   - object: /
