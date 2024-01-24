@@ -24,7 +24,6 @@ jobs:
         with:
           java-version: 17
 
-      - name: Set yaml file
       - uses: actions/checkout@v2
       - run: touch ./src/main/resources/application.yml
       - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
