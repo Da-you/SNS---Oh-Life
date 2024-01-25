@@ -2,7 +2,7 @@
 PROJECT_NAME="SNS-OhLife"
 JAR_PATH="/home/ubuntu/SNS-OhLife/deploy/*.jar"
 
-DEPLOY_PATH="/home/ubuntu/$PROJECT_NAME/deploy"
+DEPLOY_PATH="/home/ubuntu/$PROJECT_NAME/deploy/"
 DEPLOY_LOG_PATH="$DEPLOY_PATH/deploy.log"
 DEPLOY_ERR_LOG_PATH="$DEPLOY_PATH/deploy_err.log"
 APPLICATION_LOG_PATH="$DEPLOY_PATH/application.log"
