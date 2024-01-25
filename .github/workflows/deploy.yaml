@@ -41,6 +41,10 @@ jobs:
         run: zip -r ./$GITHUB_SHA .
         shell: bash
 
+      - name: Build with Gradle
+        run: ./gradlew build
+        shell: bash
+
       - name: Configuration AWS credentals
         uses: aws-actions/configure-aws-credentials@v1
         with:
