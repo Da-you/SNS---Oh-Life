@@ -58,6 +58,8 @@ public class ArticleDto {
 
     private ArticlesResponse articlesResponse;
     private List<ArticleCommentResponse> comments; // 댓글 작성자의 이름과 프로필도 가져와야하기에 별도의 DTO 생성 필요
+    private boolean isLiked;
+    private int likeCount;
   }
 
 

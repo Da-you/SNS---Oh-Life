@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.ohlife.common.utils.s3.FileNameUtils;
 import project.ohlife.domain.article.Article;
+import project.ohlife.domain.like.Like;
 import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.repository.ArticleRepository;
+import project.ohlife.repository.LikeRepository;
 import project.ohlife.repository.dto.ArticleCommentDto.ArticleCommentResponse;
 import project.ohlife.repository.dto.ArticleDto.ArticleDetailResponse;
 import project.ohlife.repository.dto.ArticleDto.ArticlesResponse;
@@ -28,6 +30,7 @@ import project.ohlife.service.s3.AwsS3Service;
 public class ArticleService {
 
   private final ArticleRepository articleRepository;
+  private final LikeRepository likeRepository;
   private final AwsS3Service s3Service;
 
   // 게시글 전체 조회 조건이 없는
@@ -74,13 +77,16 @@ public class ArticleService {
     ArticlesResponse articles = new ArticlesResponse(findUser.getProfileImage(),
         findUser.getNickname(), List.of(article.getImageUrl()), article.getContent());
 
+    boolean isLike = likeRepository.existsByArticleAndUser(article, user);
+    Integer likeCount = likeRepository.countByArticle(article);
+
     List<ArticleCommentResponse> comments = article.getArticleComments().stream()
         .map(articleComment -> new ArticleCommentResponse(articleComment.getUser().getNickname(),
             articleComment.getUser().getProfileImage(),
             articleComment.getContent()))
         .toList();
 
-    return new ArticleDetailResponse(articles, comments);
+    return new ArticleDetailResponse(articles, comments, isLike, likeCount);
 
 
   }
