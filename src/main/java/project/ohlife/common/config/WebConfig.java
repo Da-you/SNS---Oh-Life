@@ -24,7 +24,9 @@ public class WebConfig implements WebMvcConfigurer {
         .addPathPatterns("/**")
         .excludePathPatterns("/users/login", "/users/signup", "/users/mail-certification/**",
             "/users/sms-certification/**", "/users/email/{email}",
-            "/users/phoneNumber/{phoneNumber}");
+            "/users/phoneNumber/{phoneNumber}","/swagger-ui/**",
+            "/css/**", "/*.ico", "/error", "/v3/api-docs/**",
+            "/swagger-resources/**,/swagger/**","/webjars/**");
     registry.addInterceptor(new LogInterceptor())
         .order(2)
         .addPathPatterns("/**")
