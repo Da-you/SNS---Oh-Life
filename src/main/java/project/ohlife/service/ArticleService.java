@@ -2,6 +2,7 @@ package project.ohlife.service;
 
 import static project.ohlife.exception.ErrorCode.*;
 
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.ohlife.common.utils.s3.FileNameUtils;
 import project.ohlife.domain.article.Article;
-import project.ohlife.domain.like.Like;
 import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.repository.ArticleRepository;
@@ -38,43 +38,45 @@ public class ArticleService {
   public PageResponse<ArticlesResponse> getArticles(User user) {
     Page<Article> articles = articleRepository.findAll(PageRequest.of(0, 10));
 
-    List<String> imageUrls = articles.stream()
-        .map(Article::getImageUrl)
-        .toList();
+// TODO : 이미지 없는 경우 NPE 발생
+
 
     List<ArticlesResponse> contents = articles.stream()
-        .map(article -> new ArticlesResponse(article.getUser().getProfileImage(),
-            article.getUser().getNickname(), imageUrls,
+        .map(article -> new ArticlesResponse(article.getId(),article.getUser().getProfileImage(),
+            article.getUser().getNickname(), List.of(article.getImageUrl()),
             article.getContent())).toList();
 
     return PageResponse.of(articles, contents);
   }
 
-  // 게시글 검색(querydsl 사용 예정)
   public PageResponse<ArticlesResponse> getArticlesByKeyword(User user, String keyword) {
     Page<Article> articles = articleRepository.getArticleListFindByKeyword(keyword,
         PageRequest.of(0, 10));
 
+    // TODO : 이미지 없는 경우 NPE 발생
+
+
     List<String> imageUrls = articles.stream()
         .map(Article::getImageUrl)
         .toList();
 
     List<ArticlesResponse> contents = articles.stream()
-        .map(article -> new ArticlesResponse(article.getUser().getProfileImage(),
+        .map(article -> new ArticlesResponse(article.getId(),article.getUser().getProfileImage(),
             article.getUser().getNickname(), imageUrls,
             article.getContent())).toList();
 
     return PageResponse.of(articles, contents);
   }
 
-  // 게시글 상세 조회? (게시글에 있는 댓글을 보여주는 정도?)
   @Transactional(readOnly = true)
+//  @Cacheable(value = "article", key = "#articleId")
   public ArticleDetailResponse getArticleDetail(User user, Long articleId) {
     Article article = articleRepository.findById(articleId)
         .orElseThrow(() -> new CustomException(ARTICLE_NOT_FOUND));
     User findUser = article.getUser();
+  // TODO : 현재 응당 방식 수정처리 필요 (현재 방식은 모든 게시글의 이미지를 하나의 List에 담아서 보내는 방식)
 
-    ArticlesResponse articles = new ArticlesResponse(findUser.getProfileImage(),
+    ArticlesResponse articles = new ArticlesResponse(article.getId(),findUser.getProfileImage(),
         findUser.getNickname(), List.of(article.getImageUrl()), article.getContent());
 
     boolean isLike = likeRepository.existsByArticleAndUser(article, user);
@@ -105,6 +107,7 @@ public class ArticleService {
   }
 
   @Transactional
+//  @CacheEvict(value = "article", key = "#articleId")
   public void updateArticle(User user, Long articleId,
       WriteArticleRequest updateRequest, MultipartFile imageFile) {
     Article article = articleRepository.findById(articleId).orElseThrow(() -> new CustomException(
@@ -129,6 +132,7 @@ public class ArticleService {
   }
 
   @Transactional
+//  @CacheEvict(value = "article", key = "#articleId")
   public void deleteArticle(User user, Long articleId) {
     // 본인의 글인지 확인
     Article article = articleRepository.findById(articleId).orElseThrow(() -> new CustomException(

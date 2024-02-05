@@ -1,6 +1,8 @@
 package project.ohlife.repository.dto;
 
 import jakarta.annotation.Nullable;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,11 +44,13 @@ public class ArticleDto {
   @Getter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class ArticlesResponse {
+  public static class ArticlesResponse implements Serializable {
 
+    private Long articleId;
     private String profileImageUrl;
     private String nickname;
-    private List<String> imageUrls;
+    @Nullable
+    private List<String> imageUrls = new ArrayList<>();
     private String content;
 
   }
@@ -54,10 +58,10 @@ public class ArticleDto {
   @Getter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class ArticleDetailResponse {
+  public static class ArticleDetailResponse implements Serializable {
 
     private ArticlesResponse articlesResponse;
-    private List<ArticleCommentResponse> comments; // 댓글 작성자의 이름과 프로필도 가져와야하기에 별도의 DTO 생성 필요
+    private List<ArticleCommentResponse> comments = new ArrayList<>(); // 댓글 작성자의 이름과 프로필도 가져와야하기에 별도의 DTO 생성 필요
     private boolean isLiked;
     private int likeCount;
   }

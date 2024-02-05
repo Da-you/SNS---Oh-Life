@@ -1,5 +1,6 @@
 package project.ohlife.repository.dto;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ public class ArticleCommentDto {
   @Getter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class ArticleCommentResponse {
+  public static class ArticleCommentResponse implements Serializable {
     private String nickname;
     private String profileImageUrl;
     private String content;

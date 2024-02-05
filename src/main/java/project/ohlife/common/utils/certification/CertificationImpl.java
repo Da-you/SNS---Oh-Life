@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CertificationImpl implements Certification{
+
   private final StringRedisTemplate redisTemplate;
 
   @Override
