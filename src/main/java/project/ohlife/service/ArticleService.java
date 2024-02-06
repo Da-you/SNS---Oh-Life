@@ -38,12 +38,11 @@ public class ArticleService {
   public PageResponse<ArticlesResponse> getArticles(User user) {
     Page<Article> articles = articleRepository.findAll(PageRequest.of(0, 10));
 
-// TODO : 이미지 없는 경우 NPE 발생
 
 
     List<ArticlesResponse> contents = articles.stream()
         .map(article -> new ArticlesResponse(article.getId(),article.getUser().getProfileImage(),
-            article.getUser().getNickname(), List.of(article.getImageUrl()),
+            article.getUser().getNickname(), article.getImageUrl(),
             article.getContent())).toList();
 
     return PageResponse.of(articles, contents);
@@ -53,16 +52,10 @@ public class ArticleService {
     Page<Article> articles = articleRepository.getArticleListFindByKeyword(keyword,
         PageRequest.of(0, 10));
 
-    // TODO : 이미지 없는 경우 NPE 발생
-
-
-    List<String> imageUrls = articles.stream()
-        .map(Article::getImageUrl)
-        .toList();
 
     List<ArticlesResponse> contents = articles.stream()
         .map(article -> new ArticlesResponse(article.getId(),article.getUser().getProfileImage(),
-            article.getUser().getNickname(), imageUrls,
+            article.getUser().getNickname(), article.getImageUrl(),
             article.getContent())).toList();
 
     return PageResponse.of(articles, contents);
@@ -74,10 +67,9 @@ public class ArticleService {
     Article article = articleRepository.findById(articleId)
         .orElseThrow(() -> new CustomException(ARTICLE_NOT_FOUND));
     User findUser = article.getUser();
-  // TODO : 현재 응당 방식 수정처리 필요 (현재 방식은 모든 게시글의 이미지를 하나의 List에 담아서 보내는 방식)
 
     ArticlesResponse articles = new ArticlesResponse(article.getId(),findUser.getProfileImage(),
-        findUser.getNickname(), List.of(article.getImageUrl()), article.getContent());
+        findUser.getNickname(), article.getImageUrl(), article.getContent());
 
     boolean isLike = likeRepository.existsByArticleAndUser(article, user);
     Integer likeCount = likeRepository.countByArticle(article);

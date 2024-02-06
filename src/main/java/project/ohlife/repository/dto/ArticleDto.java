@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.ohlife.domain.article.Article;
-import project.ohlife.domain.article.ArticleComment;
 import project.ohlife.domain.user.User;
 import project.ohlife.repository.dto.ArticleCommentDto.ArticleCommentResponse;
 
@@ -49,8 +48,7 @@ public class ArticleDto {
     private Long articleId;
     private String profileImageUrl;
     private String nickname;
-    @Nullable
-    private List<String> imageUrls = new ArrayList<>();
+    private String imageUrls;
     private String content;
 
   }

@@ -5,12 +5,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.ohlife.domain.user.User;
 import project.ohlife.domain.user.common.UserRole;
+import project.ohlife.repository.dto.ArticleDto.ArticlesResponse;
+
 public class UserDto {
 
   @Getter
@@ -43,11 +46,13 @@ public class UserDto {
           .build();
     }
   }
+
   @Getter
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
   public static class LoginRequest {
+
     @NotBlank(message = "email은 필수 입력 값입니다.")
     private String email;
     @NotBlank(message = "password는 필수 입력 값입니다.")
@@ -63,6 +68,36 @@ public class UserDto {
     private String key;
     private String certificationNumber;
   }
+
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class ProfileUpdateRequest {
+
+    @NotBlank(message = "nickname는 필수 입력 값입니다.")
+    @Size(min = 2, max = 10, message = "nickname은 2자 이상 10자 이하로 입력해주세요.")
+    private String nickname;
+    private String description;
+  }
+
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class ProfileResponse {
+
+    private String nickname;
+    private String profileImage;
+    private String description;
+  }
+
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class SearchUserResponse{
+
+  private Long userId;
+  private String nickname;
+}
 
 
 }

@@ -5,18 +5,27 @@ import static project.ohlife.common.utils.RandomNumberGenerator.maskEmail;
 import static project.ohlife.common.utils.RandomNumberGenerator.maskPhoneNumber;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.exception.ErrorCode;
 import project.ohlife.repository.UserRepository;
 import project.ohlife.repository.dto.UserDto.LoginRequest;
+import project.ohlife.repository.dto.UserDto.ProfileResponse;
+import project.ohlife.repository.dto.UserDto.ProfileUpdateRequest;
+import project.ohlife.repository.dto.UserDto.SearchUserResponse;
 import project.ohlife.repository.dto.UserDto.SignupRequest;
+import project.ohlife.response.PageResponse;
 import project.ohlife.service.encryption.EncryptionService;
+import project.ohlife.service.s3.AwsS3Service;
 
 @Slf4j
 @Service
@@ -26,6 +35,7 @@ public class UserService {
   private final UserRepository userRepo;
   private final HttpSession session;
   private final EncryptionService encrypt;
+  private final AwsS3Service s3Service;
 
   @Transactional(readOnly = true)
   public boolean checkEmailDuplicate(String email) {
@@ -92,4 +102,48 @@ public class UserService {
       return userRepo.findByEmail(email);
     }
   }
+
+  @Transactional
+  public void updateProfileImage(User user, MultipartFile imageFile) {
+    if (imageFile == null) {
+      s3Service.deleteImage(user.getProfileImage());
+    }
+    String image = s3Service.uploadImage(imageFile);
+    user.updateProfileImage(image);
+  }
+
+  @Transactional
+  public void updateProfile(User user, ProfileUpdateRequest request) {
+    if (request.getNickname().equals(user.getNickname())) {
+      throw new CustomException(ErrorCode.PROFILE_UPDATE_NOTHING);
+    }
+    user.updateProfile(request.getNickname(), request.getDescription());
+  }
+
+  @Transactional(readOnly = true)
+  public PageResponse<SearchUserResponse> searchUser(String email, String keyword) {
+    Page<User> users = userRepo.getUserListFindByKeyword(keyword, PageRequest.of(0, 10));
+
+    List<SearchUserResponse> contents = users.stream()
+        .map(user -> new SearchUserResponse(user.getId(), user.getNickname()))
+        .toList();
+    return PageResponse.of(users, contents);
+  }
+
+
+  @Transactional(readOnly = true)
+  public ProfileResponse myProfile(String email) {
+    User user = getUser(email);
+    return new ProfileResponse(user.getNickname(), user.getProfileImage(), user.getDescription());
+  }
+
+  @Transactional(readOnly = true)
+  public ProfileResponse getUserProfile(String email, Long userId) {
+    User targetUser = userRepo.findById(userId)
+        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    return new ProfileResponse(targetUser.getNickname(), targetUser.getProfileImage(),
+        targetUser.getDescription());
+  }
+
+
 }

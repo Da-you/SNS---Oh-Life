@@ -62,6 +62,14 @@ public class User extends UserBase {
     this.phoneNumber = phoneNumber;
   }
 
+  public void updateProfileImage(String profileImage) {
+    this.profileImage = profileImage;
+  }
+  public void updateProfile(String nickname, String description) {
+    this.nickname = nickname;
+    this.description = description;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
