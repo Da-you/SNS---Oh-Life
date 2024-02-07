@@ -60,7 +60,7 @@ public class ArticleController {
   }
   @PatchMapping("/{articleId}")
   public CommonResponse<Void> updateArticle(@LoginUser String email, @PathVariable Long articleId,
-      @RequestBody WriteArticleRequest request,
+      @RequestPart(value = "request") WriteArticleRequest request,
       @RequestPart(required = false) MultipartFile imageFile) {
     User user = userService.getUser(email);
     articleService.updateArticle(user, articleId, request, imageFile);

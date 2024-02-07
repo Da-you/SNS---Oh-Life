@@ -2,6 +2,7 @@ package project.ohlife.service;
 
 import static project.ohlife.exception.ErrorCode.*;
 
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import project.ohlife.domain.article.Article;
 import project.ohlife.domain.user.User;
 import project.ohlife.exception.CustomException;
 import project.ohlife.repository.ArticleRepository;
+import project.ohlife.repository.LikeRepository;
 import project.ohlife.repository.dto.ArticleCommentDto.ArticleCommentResponse;
 import project.ohlife.repository.dto.ArticleDto.ArticleDetailResponse;
 import project.ohlife.repository.dto.ArticleDto.ArticlesResponse;
@@ -28,6 +30,7 @@ import project.ohlife.service.s3.AwsS3Service;
 public class ArticleService {
 
   private final ArticleRepository articleRepository;
+  private final LikeRepository likeRepository;
   private final AwsS3Service s3Service;
 
   // 게시글 전체 조회 조건이 없는
@@ -35,44 +38,41 @@ public class ArticleService {
   public PageResponse<ArticlesResponse> getArticles(User user) {
     Page<Article> articles = articleRepository.findAll(PageRequest.of(0, 10));
 
-    List<String> imageUrls = articles.stream()
-        .map(Article::getImageUrl)
-        .toList();
+
 
     List<ArticlesResponse> contents = articles.stream()
-        .map(article -> new ArticlesResponse(article.getUser().getProfileImage(),
-            article.getUser().getNickname(), imageUrls,
+        .map(article -> new ArticlesResponse(article.getId(),article.getUser().getProfileImage(),
+            article.getUser().getNickname(), article.getImageUrl(),
             article.getContent())).toList();
 
     return PageResponse.of(articles, contents);
   }
 
-  // 게시글 검색(querydsl 사용 예정)
   public PageResponse<ArticlesResponse> getArticlesByKeyword(User user, String keyword) {
     Page<Article> articles = articleRepository.getArticleListFindByKeyword(keyword,
         PageRequest.of(0, 10));
 
-    List<String> imageUrls = articles.stream()
-        .map(Article::getImageUrl)
-        .toList();
 
     List<ArticlesResponse> contents = articles.stream()
-        .map(article -> new ArticlesResponse(article.getUser().getProfileImage(),
-            article.getUser().getNickname(), imageUrls,
+        .map(article -> new ArticlesResponse(article.getId(),article.getUser().getProfileImage(),
+            article.getUser().getNickname(), article.getImageUrl(),
             article.getContent())).toList();
 
     return PageResponse.of(articles, contents);
   }
 
-  // 게시글 상세 조회? (게시글에 있는 댓글을 보여주는 정도?)
   @Transactional(readOnly = true)
+//  @Cacheable(value = "article", key = "#articleId")
   public ArticleDetailResponse getArticleDetail(User user, Long articleId) {
     Article article = articleRepository.findById(articleId)
         .orElseThrow(() -> new CustomException(ARTICLE_NOT_FOUND));
     User findUser = article.getUser();
 
-    ArticlesResponse articles = new ArticlesResponse(findUser.getProfileImage(),
-        findUser.getNickname(), List.of(article.getImageUrl()), article.getContent());
+    ArticlesResponse articles = new ArticlesResponse(article.getId(),findUser.getProfileImage(),
+        findUser.getNickname(), article.getImageUrl(), article.getContent());
+
+    boolean isLike = likeRepository.existsByArticleAndUser(article, user);
+    Integer likeCount = likeRepository.countByArticle(article);
 
     List<ArticleCommentResponse> comments = article.getArticleComments().stream()
         .map(articleComment -> new ArticleCommentResponse(articleComment.getUser().getNickname(),
@@ -80,7 +80,7 @@ public class ArticleService {
             articleComment.getContent()))
         .toList();
 
-    return new ArticleDetailResponse(articles, comments);
+    return new ArticleDetailResponse(articles, comments, isLike, likeCount);
 
 
   }
@@ -99,6 +99,7 @@ public class ArticleService {
   }
 
   @Transactional
+//  @CacheEvict(value = "article", key = "#articleId")
   public void updateArticle(User user, Long articleId,
       WriteArticleRequest updateRequest, MultipartFile imageFile) {
     Article article = articleRepository.findById(articleId).orElseThrow(() -> new CustomException(
@@ -123,6 +124,7 @@ public class ArticleService {
   }
 
   @Transactional
+//  @CacheEvict(value = "article", key = "#articleId")
   public void deleteArticle(User user, Long articleId) {
     // 본인의 글인지 확인
     Article article = articleRepository.findById(articleId).orElseThrow(() -> new CustomException(

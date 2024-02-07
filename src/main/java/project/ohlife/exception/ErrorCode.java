@@ -14,6 +14,7 @@ public enum ErrorCode {
   // CONFLICT(409, Resource 의 현재 상태와 충돌함, 보통 중복된 데이터가 존재 )
   EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, 40901, "email is duplicate"),
   PHONE_NUMBER_DUPLICATE(HttpStatus.CONFLICT, 40902, "phoneNumber is duplicate"),
+  PROFILE_UPDATE_NOTHING(HttpStatus.CONFLICT,40903,"nickname update nothing"),
 
 
   // BAD_REQUEST(400, 잘못된 요청)
