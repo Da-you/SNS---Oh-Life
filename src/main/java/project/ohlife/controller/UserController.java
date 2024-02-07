@@ -1,5 +1,6 @@
 package project.ohlife.controller;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -112,17 +113,15 @@ public class UserController {
 
   @PatchMapping("/profile-image")
   public CommonResponse<Void> updateProfileImage(@LoginUser String email,
-      @RequestPart(required = false) MultipartFile profileImage) {
-    User user = userService.getUser(email);
-    userService.updateProfileImage(user, profileImage);
+      @RequestPart(required = false,name = "image") MultipartFile profileImage) {
+    userService.updateProfileImage(email, profileImage);
     return CommonResponse.ok();
   }
 
   @PatchMapping("/profile")
   public CommonResponse<Void> updateProfile(@LoginUser String email,
       @RequestBody ProfileUpdateRequest request) {
-    User user = userService.getUser(email);
-    userService.updateProfile(user, request);
+    userService.updateProfile(email, request);
     return CommonResponse.ok();
   }
 

@@ -66,6 +66,7 @@ public class UserService {
   public void login(LoginRequest request) {
     existByEmailAndPassword(request);
     session.setAttribute("user", request.getEmail());
+    log.info("expire time: {}", session.getMaxInactiveInterval());
     log.info("login session: {}", session.getAttribute("user"));
   }
 
@@ -95,6 +96,7 @@ public class UserService {
     user.withdrawal(maskEmail(user.getEmail()), maskPhoneNumber(user.getPhoneNumber()));
   }
 
+  @Transactional(readOnly = true)
   public User getUser(String email) {
     if (userRepo.findByEmail(email) == null) {
       throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -104,16 +106,18 @@ public class UserService {
   }
 
   @Transactional
-  public void updateProfileImage(User user, MultipartFile imageFile) {
+  public void updateProfileImage(String email, MultipartFile imageFile) {
+    User user = getUser(email);
     if (imageFile == null) {
       s3Service.deleteImage(user.getProfileImage());
     }
-    String image = s3Service.uploadImage(imageFile);
-    user.updateProfileImage(image);
+    String profileImage = s3Service.uploadImage(imageFile);
+    user.updateProfileImage(profileImage);
   }
 
   @Transactional
-  public void updateProfile(User user, ProfileUpdateRequest request) {
+  public void updateProfile(String  email, ProfileUpdateRequest request) {
+    User user = getUser(email);
     if (request.getNickname().equals(user.getNickname())) {
       throw new CustomException(ErrorCode.PROFILE_UPDATE_NOTHING);
     }
